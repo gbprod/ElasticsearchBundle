@@ -84,6 +84,10 @@ class M6WebElasticsearchExtension extends Extension
         if ($container->getParameter('kernel.debug')) {
             $this->createDataCollector($container);
         }
+        
+        if (isset($config['indices'])) {
+            $this->createIndicesParameters($container, $name, $config['indices'])
+        }
     }
 
     /**
@@ -145,7 +149,6 @@ class M6WebElasticsearchExtension extends Extension
         }
     }
 
-
     /**
      * @param ContainerBuilder $container
      */
@@ -171,5 +174,25 @@ class M6WebElasticsearchExtension extends Extension
         );
 
         $container->setDefinition('m6web_elasticsearch.data_collector', $collectorDefinition);
+    }
+    
+    /**
+     * Create parameters for host's indices configuration
+     * 
+     * @param ContainerBuilder $container
+     * @param string           $container
+     * @param array            $indices
+     */
+    private function createIndicesParameters(ContainerBuilder $container, $clientName, $indices)
+    {
+        foreach ($indices as $indexName => $config) {
+            $parameterName = sprintf(
+                'm6web_elasticsearch.index.%s.%s',
+                $clientName,
+                $indexName
+            );
+            
+            $container->setParameter($parameterName, $config);
+        }
     }
 }

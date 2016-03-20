@@ -36,6 +36,8 @@ class Configuration implements ConfigurationInterface
                         ->integerNode('retries')->end()
                         ->scalarNode('logger')->end()
                         ->variableNode('headers')->end()
+                        ->arrayNode('indices')
+                        ->end()
                     ->end()
                 ->end()
             ->end();
